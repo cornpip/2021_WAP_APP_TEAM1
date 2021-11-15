@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:together/src/Provider/counter_Provider.dart';
+import 'package:together/src/ui/TGTtop_bar.dart';
 
 class add extends StatefulWidget {
   add({Key? key}) : super(key: key);
@@ -44,7 +45,6 @@ class add extends StatefulWidget {
     }
 
     return Scaffold(
-
       key : _scaffoldKey,
       endDrawer : Container(
         width:250,
@@ -61,28 +61,7 @@ class add extends StatefulWidget {
             )
         ),
       ),
-      appBar: AppBar(
-          title: Text('등록'),
-          centerTitle: true, elevation:0.0,
-          leading: IconButton(
-              icon:Icon(Icons.arrow_left_rounded),
-              onPressed: (){
-                print('gotoback(navigation위젯');
-              }
-          ),
-          actions: <Widget>[
-            Container(
-              child: IconButton(
-                iconSize: 40,
-                color: Colors.black,
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  _scaffoldKey.currentState!.openEndDrawer();
-                },
-              ),
-            )
-          ]),
-
+      appBar: TGTtop_bar(key: _scaffoldKey, appBar: AppBar(), title: "등록"),
       body: SafeArea(
           child: Column(
             children: <Widget>[
