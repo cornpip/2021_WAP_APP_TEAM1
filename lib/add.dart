@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:together/TGTtop_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:together/src/Provider/counter_Provider.dart';
 
 class add extends StatefulWidget {
   add({Key? key}) : super(key: key);
@@ -23,8 +24,14 @@ class add extends StatefulWidget {
 
   final _valueList = ['FOOD', 'PRACTICE', 'GOODS', 'ETC'];
   var _selectedValue;
+
+  late CountProvider _counterProvider;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+    _counterProvider = Provider.of<CountProvider>(context);
+
     Future pickImage(ImageSource source) async {
       try {
         final image = await ImagePicker().pickImage(source: source);
@@ -37,7 +44,45 @@ class add extends StatefulWidget {
     }
 
     return Scaffold(
-      appBar: TGTtop_bar
+
+      key : _scaffoldKey,
+      endDrawer : Container(
+        width:250,
+        child : Drawer(
+            child : ListView(
+              padding : EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child:Text('Drawer'),
+                  decoration: BoxDecoration(
+                    color:Colors.blue,),
+                ),
+              ],
+            )
+        ),
+      ),
+      appBar: AppBar(
+          title: Text('등록'),
+          centerTitle: true, elevation:0.0,
+          leading: IconButton(
+              icon:Icon(Icons.arrow_left_rounded),
+              onPressed: (){
+                print('gotoback(navigation위젯');
+              }
+          ),
+          actions: <Widget>[
+            Container(
+              child: IconButton(
+                iconSize: 40,
+                color: Colors.black,
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+              ),
+            )
+          ]),
+
       body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -127,15 +172,27 @@ class add extends StatefulWidget {
                 padding:const EdgeInsets.all(8.0),
                 child: TextButton(
                   onPressed: (){
-
                   },
                   child: Text("위치 선택"),
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
 
+                children: [
+
+                  Text('인원수'),
+                  Text(Provider.of<CountProvider>(context).count.toString()),
+                  IconButton(onPressed:(){_counterProvider.add();},
+                      icon: Icon(Icons.add),
+                      ),
+                  IconButton(onPressed:(){_counterProvider.remove();},
+                      icon: Icon(Icons.remove),
+                  ),
+                ],
+              )
             ],
           )
-
 
       ),
 
