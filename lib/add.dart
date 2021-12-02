@@ -13,14 +13,13 @@ class add extends StatefulWidget {
   @override
   _addState createState() => _addState();
 }
- class _addState extends State<add> {
-  File? image;
+class _addState extends State<add> {
+  File? _contentImage;
 
   Future<File> saveImagePermanently(String imagePath) async {
     final directory = await getApplicationDocumentsDirectory();
-    final image = File('${directory.path}/name');
-
-    return File(imagePath).copy(image.path);
+    final _contentImage = File('${directory.path}/name');
+    return File(imagePath).copy(_contentImage.path);
   }
 
   final _valueList = ['FOOD', 'PRACTICE', 'GOODS', 'ETC'];
@@ -35,27 +34,27 @@ class add extends StatefulWidget {
 
     Future pickImage(ImageSource source) async {
       try {
-        final image = await ImagePicker().pickImage(source: source);
-        if (image == null) return;
-        final imagePermanent = await saveImagePermanently(image.path);
-        setState(() => this.image = imagePermanent);
+        final _contentImage = await ImagePicker().pickImage(source: source);
+        if (_contentImage == null) return;
+        final imagePermanent = await saveImagePermanently(_contentImage.path);
+        setState(() => this._contentImage = imagePermanent);
       } on PlatformException catch (e) {
         print('Failed to pick Image : $e');
       }
     }
 
     return Scaffold(
-      key : _scaffoldKey,
-      endDrawer : Container(
-        width:250,
-        child : Drawer(
-            child : ListView(
-              padding : EdgeInsets.zero,
+      key: _scaffoldKey,
+      endDrawer: Container(
+        width: 250,
+        child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: <Widget>[
                 DrawerHeader(
-                  child:Text('Drawer'),
+                  child: Text('Drawer'),
                   decoration: BoxDecoration(
-                    color:Colors.blue,),
+                    color: Colors.blue,),
                 ),
               ],
             )
@@ -65,16 +64,21 @@ class add extends StatefulWidget {
       body: SafeArea(
           child: Column(
             children: <Widget>[
-              image != null
+              _contentImage != null
                   ? Container(
+                  width: 100, height: 100,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: FileImage(image!)
-                      )
-                   )
-
+                        fit: BoxFit.fill,
+                          image: FileImage(File(_contentImage!.path))
+                      ),
+                  ),
               )
-                  : RaisedButton(onPressed: () =>
+                  : IconButton(
+                icon : Icon(Icons.add_photo_alternate),
+                color: Colors.grey,
+                iconSize: 100,
+                onPressed: () {
                   showDialog<void>(
                       context: context,
                       builder: (BuildContext context) {
@@ -87,34 +91,34 @@ class add extends StatefulWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           ),
-
-                          children: <Widget>[
-                            SimpleDialogOption(
-                              child: Text('사진 찍기',
-                                  style: TextStyle(color: Colors.black)),
-                              onPressed: () => pickImage(ImageSource.camera),
-                            ),
-                            SimpleDialogOption(
-                              child: Text('사진 가져오기',
-                                  style: TextStyle(color: Colors.black)),
-                              onPressed: () => pickImage(ImageSource.gallery),
-                            ),
-                            SimpleDialogOption(
-                              child: Text('취소',
-                                  style: TextStyle(color: Colors.grey)),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-
-                          ],
-                        );
-                      }
+                children: <Widget>[
+                  SimpleDialogOption(
+                    child: Text('사진 찍기',
+                        style: TextStyle(color: Colors.black)),
+                    onPressed : () => pickImage(ImageSource.camera),
                   ),
-                  child: Icon(Icons.add_photo_alternate, color: Colors.grey,
-                      size: 100)),
+
+
+                  SimpleDialogOption(
+                    child: Text('사진 가져오기',
+                        style: TextStyle(color: Colors.black)),
+                    onPressed: () => pickImage(ImageSource.gallery),
+                  ),
+                  SimpleDialogOption(
+                    child: Text('취소',
+                        style: TextStyle(color: Colors.grey)),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            }
+        ); },
+              ),
+
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:TextFormField(
+                child: TextFormField(
                   decoration: InputDecoration(
                       labelText: '제목을 입력해주세요',
                       border: OutlineInputBorder()),
@@ -122,7 +126,7 @@ class add extends StatefulWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:TextFormField(
+                child: TextFormField(
                   decoration: InputDecoration(
                       labelText: '상세내용을 입력해주세요',
                       border: OutlineInputBorder()),
@@ -133,12 +137,12 @@ class add extends StatefulWidget {
                 child: Center(
                   child: DropdownButton(
                     hint: Text('카테고리'),
-                    value : _selectedValue,
-                    items: _valueList.map((value){
-                          return DropdownMenuItem(
-                            value : value, child: Text(value));
-                        }).toList(),
-                    onChanged: (value){
+                    value: _selectedValue,
+                    items: _valueList.map((value) {
+                      return DropdownMenuItem(
+                          value: value, child: Text(value));
+                    }).toList(),
+                    onChanged: (value) {
                       print(value);
                       setState(() {
                         _selectedValue = value;
@@ -148,37 +152,43 @@ class add extends StatefulWidget {
                 ),
               ),
               Padding(
-                padding:const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: TextButton(
-                  onPressed: (){
-                  },
+                  onPressed: () {},
                   child: Text("위치 선택"),
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-
                 children: [
-
                   Text('인원수'),
                   Text(Provider.of<CountProvider>(context).count.toString()),
-                  IconButton(onPressed:(){_counterProvider.add();},
-                      icon: Icon(Icons.add),
-                      ),
-                  IconButton(onPressed:(){_counterProvider.remove();},
-                      icon: Icon(Icons.remove),
+                  IconButton(onPressed: () {
+                    _counterProvider.add();
+                  },
+                    icon: Icon(Icons.add),
+                  ),
+                  IconButton(onPressed: () {
+                    _counterProvider.remove();
+                  },
+                    icon: Icon(Icons.remove),
                   ),
                 ],
-              )
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child : ElevatedButton(
+                  child:Text('등록하기'),
+                  onPressed: (){
+                  },
+                )
+              ),
             ],
           )
 
       ),
 
     );
-
   }
-
-
 
 }

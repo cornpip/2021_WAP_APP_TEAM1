@@ -18,7 +18,7 @@ class TGTtop_bar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       key:_scaffoldKey,
-        title: Text("title"),
+        title: Text("$title"),
         centerTitle: center,
         leading: IconButton(
            icon:Icon(Icons.arrow_left_rounded),
