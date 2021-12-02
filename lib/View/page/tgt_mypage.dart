@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TGTMyPageWidget extends StatefulWidget {
-  const TGTMyPageWidget({Key? key}) : super(key: key);
+  const TGTMyPageWidget({Key key}) : super(key: key);
 
   @override
   _TGTMyPageWidgetState createState() => _TGTMyPageWidgetState();
@@ -48,7 +48,7 @@ class _TGTMyPageWidgetState extends State<TGTMyPageWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Icon(
-                            Icons.production_quantity_limits,
+                            Icons.description,
                             size: 16.0,
                             color: _buttonsState[0]
                                 ? Colors.white
@@ -75,7 +75,7 @@ class _TGTMyPageWidgetState extends State<TGTMyPageWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Icon(
-                            Icons.production_quantity_limits_outlined,
+                            Icons.height,
                             size: 16.0,
                             color: _buttonsState[1]
                                 ? Colors.white

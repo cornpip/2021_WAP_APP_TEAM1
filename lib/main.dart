@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'view/tgt_mypage_widget.dart';
+import 'View/ui/tgt_sidebar_widget.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class TopBar extends StatefulWidget {
-  TopBar({Key? key}) : super(key: key);
+  TopBar({Key key}) : super(key: key);
 
   @override
   _TopBarState createState() => _TopBarState();
@@ -31,52 +31,7 @@ class _TopBarState extends State<TopBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      endDrawer: Container(
-        width: 250,
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Text("프로필?"),
-                decoration: BoxDecoration(color: Colors.blueGrey),
-              ),
-              ListTile(
-                title: Text("마이페이지로 가기"),
-                onTap: () {
-                  //아래처럼 하면 사이드바가 사라지지 않은 상태에서 Mypage가 위에 덮어짐.
-                  //사이드바가 사라지면서 이동할 수 있는 것도 찾아보기.
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => TGTMyPageWidget()));
-                },
-              ),
-              Divider(
-                thickness: 1,
-              ),
-              ListTile(
-                title: Text("지도로 위치 찍기"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => TGTMyPageWidget()));
-                },
-              ),
-              Divider(
-                thickness: 1,
-              ),
-              ListTile(
-                title: Text("설정"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => TGTMyPageWidget()));
-                },
-              ),
-              Divider(
-                thickness: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
+      endDrawer: TGTSideBar(),
       appBar: AppBar(
           backgroundColor: Colors.white,
           toolbarHeight: 80,
@@ -92,7 +47,7 @@ class _TopBarState extends State<TopBar> {
                 color: Colors.black,
                 icon: Icon(Icons.menu),
                 onPressed: () {
-                  _scaffoldKey.currentState!.openEndDrawer();
+                  _scaffoldKey.currentState.openEndDrawer();
                 },
               ),
             )
@@ -100,6 +55,8 @@ class _TopBarState extends State<TopBar> {
     );
   }
 }
+
+
 
 // class MapSample extends StatefulWidget {
 //   @override
