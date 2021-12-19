@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:together/src/Provider/counter_Provider.dart';
 import 'package:together/src/ui/TGTtop_bar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class add extends StatefulWidget {
   add({Key? key}) : super(key: key);
@@ -22,15 +24,18 @@ class _addState extends State<add> {
     return File(imagePath).copy(_contentImage.path);
   }
 
+  final TextEditingController _title = new TextEditingController();
+  final TextEditingController _detail = new TextEditingController();
   final _valueList = ['FOOD', 'PRACTICE', 'GOODS', 'ETC'];
   var _selectedValue;
-
-  late CountProvider _counterProvider;
+  //_place 추가하기
+  late DateTime _limitedDate = new DateTime.now();
+  late CountProvider _maxparticipant;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    _counterProvider = Provider.of<CountProvider>(context);
+    _maxparticipant = Provider.of<CountProvider>(context);
 
     Future pickImage(ImageSource source) async {
       try {
@@ -115,18 +120,20 @@ class _addState extends State<add> {
         ); },
               ),
 
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  controller : _title,
                   decoration: InputDecoration(
                       labelText: '제목을 입력해주세요',
-                      border: OutlineInputBorder()),
+                      border: OutlineInputBorder()
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  controller: _detail,
                   decoration: InputDecoration(
                       labelText: '상세내용을 입력해주세요',
                       border: OutlineInputBorder()),
@@ -151,12 +158,33 @@ class _addState extends State<add> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text("위치 선택"),
-                ),
+              TextButton(
+                child: Text('위치선택'),
+                onPressed: (){},
+              ),
+              TextButton(
+                child: Text('날짜선택'),
+                onPressed: (){
+                  Future<DateTime?> selectedDate = showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2021),
+                      lastDate: DateTime(2025),
+                    builder: (BuildContext context, Widget? child){
+                        return Theme(
+                          data: ThemeData.light(),
+                          child: child!,
+                        );
+                    },
+                  );
+                  selectedDate.then((dateTime){
+                    setState((){
+                      _limitedDate = dateTime!;
+                    });
+                  });
+                },
+              ),
+              Text('${_limitedDate.year}/${_limitedDate.month}/${_limitedDate.day}', style: TextStyle(fontSize: 20),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -164,25 +192,23 @@ class _addState extends State<add> {
                   Text('인원수'),
                   Text(Provider.of<CountProvider>(context).count.toString()),
                   IconButton(onPressed: () {
-                    _counterProvider.add();
+                    _maxparticipant.add();
                   },
                     icon: Icon(Icons.add),
                   ),
                   IconButton(onPressed: () {
-                    _counterProvider.remove();
+                    _maxparticipant.remove();
                   },
                     icon: Icon(Icons.remove),
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child : ElevatedButton(
+                  ElevatedButton(
                   child:Text('등록하기'),
                   onPressed: (){
+                    //setContent();
                   },
                 )
-              ),
             ],
           )
 
@@ -192,3 +218,20 @@ class _addState extends State<add> {
   }
 
 }
+
+// void setContent() async {
+//   String TGTContenturl = "http://118.223.255.68:4000/";
+//   var TGTContentresponse = await http.get(TGTContenturl);
+//   var TGTContentData = convert.jsonDecode(
+//       convert.utf8.decode(TGTContentresponse.bodyBytes));
+//   setState(
+//         () {
+//       _title = TGTContentData["title"];
+//       _detail = TGTContentData["detail"];
+//       _contentImage = TGTContentData["contentImage"];
+//       _maxParticipant = TGTContentData["maxParticipant"];
+//       _limitedDate = TGTContentData["limitedDate"];
+//     },
+//   );
+// }
+
