@@ -9,6 +9,7 @@ import 'package:together/src/Provider/counter_Provider.dart';
 import 'package:together/src/ui/TGTtop_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:together/src/ui/tgtbutton.dart';
 
 class add extends StatefulWidget {
   add({Key? key}) : super(key: key);
@@ -203,20 +204,21 @@ class _addState extends State<add> {
                   ),
                 ],
               ),
-                  ElevatedButton(
-                  child:Text('등록하기'),
-                  onPressed: (){
-                    //setContent();
-                  },
-                )
+              TGTButton(
+                child: const Icon(
+                  Icons.upload,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  //setContent
+                },
+              )
             ],
           )
-
       ),
-
     );
   }
-
 }
 
 // void setContent() async {
